@@ -46,9 +46,11 @@ int main(int argc, char const *argv[])
 	/* code */
 	FILE *fichier;
 	int *T;
-	int size=0, buffer, x;
+	int size=0, buffer;
 	int nb_threads = 0 ;
   	pthread_t *tids ;
+
+  	struct search * s = malloc(sizeof(struct search));
 
 	if(argc != 3){
 		(stderr, "usage : %s fichier valeur_a_chercher\n", argv[0]); 
@@ -72,13 +74,17 @@ int main(int argc, char const *argv[])
 		
 	T = init_vecteur(T,fichier);
 	afficherT(T,size);
-	x = atoi(argv[2]); // l'élément cherché dans tab
+
+	s->T = T;
+	s->size = size;
+	s->x = atoi(argv[2]); // l'élément cherché dans tab
+
 	if(size >= 2){
 		nb_threads = size/2;
 		tids = malloc (nb_threads*sizeof(pthread_t));
 		/* Create the threads */
   		for (i = 0 ; i < nb_threads; i++){
-    		pthread_create (&tids[i], NULL, search, ) ;
+    		pthread_create (&tids[i], NULL, search, s);
   		}
 	}	
 	return 0;
